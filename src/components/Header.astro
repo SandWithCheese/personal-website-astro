@@ -1,0 +1,72 @@
+<Fragment>
+  <div
+    id="scroll-sentinel"
+    class="pointer-events-none absolute top-0 h-1 w-full"
+  >
+  </div>
+
+  <header
+    id="main-header"
+    class:list={[
+      "fixed inset-x-0 top-0 z-10 flex w-full border-b border-b-transparent bg-transparent px-10 py-5 backdrop-blur-none transition-[background,backdrop-filter,border-bottom] duration-350 ease-in-out",
+    ]}
+  >
+    <nav class="flex w-full justify-between">
+      <a class="font-bold" href="/">@sandwicheese</a>
+
+      <ul class="flex gap-8 text-sm text-[#7a7a7a]">
+        <li>
+          <a
+            href="/projects"
+            class="duration-150 ease-in-out hover:text-[#e5e7eb]">Projects</a
+          >
+        </li>
+        <li>
+          <a href="/blog" class="duration-150 ease-in-out hover:text-[#e5e7eb]"
+            >Blog</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </header>
+</Fragment>
+
+<script>
+  const header = document.getElementById("main-header");
+  const sentinel = document.getElementById("scroll-sentinel");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const isScrolled = !entries[0].isIntersecting;
+
+      if (isScrolled) {
+        header?.classList.add(
+          "bg-[#0a0a0a]/80",
+          "backdrop-blur-md",
+          "border-b-white/10",
+        );
+        header?.classList.remove(
+          "bg-transparent",
+          "backdrop-blur-none",
+          "border-b-transparent",
+        );
+      } else {
+        header?.classList.remove(
+          "bg-[#0a0a0a]/80",
+          "backdrop-blur-md",
+          "border-b-white/10",
+        );
+        header?.classList.add(
+          "bg-transparent",
+          "backdrop-blur-none",
+          "border-b-transparent",
+        );
+      }
+    },
+    { threshold: [0] },
+  );
+
+  if (sentinel) {
+    observer.observe(sentinel);
+  }
+</script>
