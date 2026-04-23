@@ -1,72 +1,45 @@
-<Fragment>
-  <div
-    id="scroll-sentinel"
-    class="pointer-events-none absolute top-0 h-1 w-full"
+---
+const pathname = Astro.url.pathname;
+
+const navItems = [
+  { href: "/", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/journals", label: "Journals" },
+];
+
+const isActive = (href: string) => {
+  if (href === "/") return pathname === "/";
+  return pathname.startsWith(href);
+};
+---
+
+<header
+  id="main-header"
+  class:list={[
+    "fixed inset-x-0 top-0 z-10 flex w-full justify-center px-10 py-4",
+  ]}
+>
+  <nav
+    class="flex justify-center rounded-full border-b border-b-[#525252]/60 bg-[#242424]/75 px-2 py-3 backdrop-blur-lg"
   >
-  </div>
-
-  <header
-    id="main-header"
-    class:list={[
-      "fixed inset-x-0 top-0 z-10 flex w-full border-b border-b-transparent bg-transparent px-10 py-5 backdrop-blur-none transition-[background,backdrop-filter,border-bottom] duration-350 ease-in-out",
-    ]}
-  >
-    <nav class="flex w-full justify-between">
-      <a class="font-bold" href="/">@sandwicheese</a>
-
-      <ul class="flex gap-8 text-sm text-[#7a7a7a]">
-        <li>
-          <a
-            href="/projects"
-            class="duration-150 ease-in-out hover:text-[#e5e7eb]">Projects</a
-          >
-        </li>
-        <li>
-          <a href="/blog" class="duration-150 ease-in-out hover:text-[#e5e7eb]"
-            >Blog</a
-          >
-        </li>
-      </ul>
-    </nav>
-  </header>
-</Fragment>
-
-<script>
-  const header = document.getElementById("main-header");
-  const sentinel = document.getElementById("scroll-sentinel");
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const isScrolled = !entries[0].isIntersecting;
-
-      if (isScrolled) {
-        header?.classList.add(
-          "bg-[#0a0a0a]/80",
-          "backdrop-blur-md",
-          "border-b-white/10",
-        );
-        header?.classList.remove(
-          "bg-transparent",
-          "backdrop-blur-none",
-          "border-b-transparent",
-        );
-      } else {
-        header?.classList.remove(
-          "bg-[#0a0a0a]/80",
-          "backdrop-blur-md",
-          "border-b-white/10",
-        );
-        header?.classList.add(
-          "bg-transparent",
-          "backdrop-blur-none",
-          "border-b-transparent",
-        );
+    <ul class="text-muted-foreground flex text-sm">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
+              class:list={[
+                "px-4 py-2 duration-150 ease-in-out hover:text-[#e5e7eb]",
+                isActive(item.href) &&
+                  "bg-background/40 rounded-full text-[#e5e7eb]",
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
       }
-    },
-    { threshold: [0] },
-  );
-
-  if (sentinel) {
-    observer.observe(sentinel);
-  }
-</script>
+    </ul>
+  </nav>
+</header>

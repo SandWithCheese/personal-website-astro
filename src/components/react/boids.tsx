@@ -290,7 +290,7 @@ function Boids() {
                 Ahmad Naufal Ramadan
               </h1>
               <p
-                className="text-lg text-[#7a7a7a]"
+                className="text-muted-foreground text-lg"
                 style={{ pointerEvents: "auto" }}
               >
                 Software Engineer and Recreational Programmer
