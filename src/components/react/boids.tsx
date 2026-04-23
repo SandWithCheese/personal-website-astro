@@ -3,7 +3,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   InstancedRigidBodies,
   Physics,
-  RapierRigidBody,
+  type RapierRigidBody,
   type InstancedRigidBodyProps,
 } from "@react-three/rapier";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
