@@ -282,15 +282,15 @@ function Boids() {
             zIndexRange={[9, 0]}
             style={{ pointerEvents: "none" }}
           >
-            <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+            <div className="flex h-screen w-full flex-col items-center justify-center gap-4 px-4 text-center">
               <h1
-                className="text-6xl font-extrabold"
+                className="text-3xl font-extrabold sm:text-5xl lg:text-6xl"
                 style={{ pointerEvents: "auto" }}
               >
                 Ahmad Naufal Ramadan
               </h1>
               <p
-                className="text-muted-foreground text-lg"
+                className="text-muted-foreground text-sm sm:text-base lg:text-lg"
                 style={{ pointerEvents: "auto" }}
               >
                 Software Engineer and Recreational Programmer

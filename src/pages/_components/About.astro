@@ -1,0 +1,190 @@
+---
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Image } from "astro:assets";
+import { cn } from "@/lib/utils";
+import { TOP_3_EXPERIENCES } from "@/data/experience";
+import { LANGUAGES } from "@/data/languages";
+import { ACHIEVEMENTS } from "@/data/achievements";
+
+import profilePicture from "@/assets/profile.jpg";
+import itbLogo from "@/assets/logo-itb.png";
+
+const CARD_CLASS =
+  "border-card border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#cccccc] hover:shadow-2xl";
+---
+
+<section
+  class="flex min-h-screen w-full flex-col items-center justify-center gap-8 px-4 sm:px-8 md:px-24"
+>
+  <div class="flex flex-col gap-2 self-start text-start">
+    <h2
+      class="text-muted-foreground font-sans text-xs font-semibold tracking-[0.3em]"
+    >
+      01 — WHO I AM
+    </h2>
+    <p class="text-4xl font-bold">A Bit About Me</p>
+  </div>
+
+  <div class="flex w-full flex-col gap-4">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-6 xl:grid-cols-5">
+      <Card className={cn(CARD_CLASS, "lg:col-span-4 xl:col-span-3")}>
+        <CardHeader>
+          <CardTitle className="text-xs font-semibold tracking-widest"
+            >THE NARRATIVE</CardTitle
+          >
+          <CardDescription className="text-foreground text-xl font-bold"
+            >About & Education</CardDescription
+          >
+        </CardHeader>
+        <CardContent className="flex h-full flex-col gap-4">
+          <div
+            class="flex flex-col items-center gap-4 md:flex-row md:items-start"
+          >
+            <Image
+              src={profilePicture}
+              alt="Portrait of Ahmad Naufal Ramadan"
+              width={480}
+              height={480}
+              class="aspect-square w-40 shrink-0 rounded-md object-cover"
+            />
+            <p class="text-muted-foreground text-sm leading-relaxed">
+              I'm a Computer Science student at Institut Teknologi Bandung with
+              a deep passion for systems programming and cybersecurity. My
+              journey started with breaking things — CTFs, reverse engineering,
+              vulnerability research — and evolved into building them. Today I
+              design software with a security-first philosophy.
+            </p>
+          </div>
+
+          <div class="mt-auto">
+            <Separator className="my-4" />
+
+            <div class="flex flex-col gap-4 md:flex-row md:items-center">
+              <div class="flex shrink-0 items-center gap-3">
+                <div
+                  class="bg-muted flex h-12 w-12 shrink-0 items-center justify-center rounded-lg p-1"
+                >
+                  <Image
+                    src={itbLogo}
+                    alt="Institut Teknologi Bandung"
+                    width={480}
+                    height={480}
+                    class="h-full w-full object-contain"
+                  />
+                </div>
+                <div>
+                  <p class="text-foreground text-sm font-bold">
+                    Institut Teknologi Bandung
+                  </p>
+                  <p class="text-muted-foreground text-xs">
+                    Computer Science &middot; 2022 — Present
+                  </p>
+                </div>
+              </div>
+
+              <Separator className="md:hidden" />
+              <Separator orientation="vertical" className="hidden md:block" />
+
+              <div class="flex flex-col gap-1.5">
+                <p class="text-xs font-semibold tracking-widest uppercase">
+                  Most Used Languages
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  {
+                    LANGUAGES.map((lang) => (
+                      <div class="border-border text-foreground flex items-center gap-1.5 rounded-full border px-2.5 py-1">
+                        <span
+                          class="h-2 w-2 shrink-0 rounded-full"
+                          style={`background-color: ${lang.color ?? "#888"}`}
+                        />
+                        <span class="text-xs font-medium">{lang.name}</span>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className={cn(CARD_CLASS, "lg:col-span-2")}
+        ><CardHeader>
+          <CardTitle className="text-xs font-semibold tracking-widest"
+            >THE JOURNEY</CardTitle
+          >
+          <CardDescription className="text-foreground text-xl font-bold"
+            >Highlights</CardDescription
+          >
+        </CardHeader>
+        <CardContent className="relative flex flex-col gap-4">
+          <div
+            class="bg-border absolute top-2 bottom-2 left-[31px] w-px"
+            aria-hidden="true"
+          >
+          </div>
+
+          {
+            TOP_3_EXPERIENCES.map((experience) => (
+              <div class="relative pl-7">
+                <span class="border-foreground bg-card absolute top-1.5 left-0 flex h-[15px] w-[15px] items-center justify-center rounded-full border-2">
+                  <span class="bg-primary h-[7px] w-[7px] rounded-full" />
+                </span>
+
+                <p class="text-muted-foreground mb-0.5 text-xs font-medium">
+                  {experience?.period}
+                </p>
+
+                <p class="text-sm font-bold">{experience?.role}</p>
+
+                <p class="text-xs font-medium">{experience?.company}</p>
+
+                <p class="text-muted-foreground mt-1.5 text-xs leading-relaxed">
+                  {experience?.description}
+                </p>
+              </div>
+            ))
+          }
+        </CardContent>
+      </Card>
+    </div>
+
+    <Card className={CARD_CLASS}
+      ><CardHeader>
+        <CardTitle className="text-xs font-semibold tracking-widest"
+          >THE LEGACY</CardTitle
+        >
+        <CardDescription className="text-foreground text-xl font-bold"
+          >Achievements</CardDescription
+        >
+      </CardHeader>
+      <CardContent
+        className="grid grid-cols-1 justify-center gap-4 sm:flex sm:flex-wrap lg:grid lg:grid-cols-5 lg:gap-2 xl:gap-4"
+      >
+        {
+          ACHIEVEMENTS.map((achievement) => (
+            <div class="border-border/20 bg-background/25 flex w-full flex-col items-center gap-2 rounded-md border px-4 py-4 text-center transition-all duration-200 hover:border-[#cccccc]/80 hover:shadow-2xl sm:w-56 lg:w-auto">
+              <Image
+                src={achievement.logo}
+                alt={achievement.title}
+                width={480}
+                height={480}
+                class="aspect-square h-24 w-24 rounded-md object-contain"
+              />
+              <p class="text-sm font-bold">{achievement.title}</p>
+              <p class="text-xs font-medium">{achievement.organizer}</p>
+              <p class="text-xs font-medium">{achievement.position}</p>
+            </div>
+          ))
+        }
+      </CardContent></Card
+    >
+  </div>
+</section>

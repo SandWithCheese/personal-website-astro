@@ -1,19 +1,15 @@
 ---
-import Hero from "@/components/Hero.astro";
 import Layout from "@/layouts/Layout.astro";
+import Hero from "./_components/Hero.astro";
+import About from "./_components/About.astro";
 ---
 
 <Layout>
   <main>
     <Hero />
+    <About />
     <section
-      class="flex min-h-screen w-full flex-col items-center justify-center"
-    >
-      <h1>Hello World!</h1>
-    </section>
-
-    <section
-      class="flex min-h-screen w-full flex-col items-center justify-center"
+      class="flex min-h-screen w-full flex-col items-center justify-center px-24"
     >
       <h1>Hello World!</h1>
     </section>
