@@ -1,5 +1,5 @@
 ---
-import { PROJECTS } from "@/data/projects";
+import { TOP_3_PROJECTS } from "@/data/projects";
 import { ArrowUpRight } from "lucide-react";
 import GitHubIcon from "@/components/icons/github";
 ---
@@ -37,12 +37,12 @@ import GitHubIcon from "@/components/icons/github";
       </div>
       <div class="text-muted-foreground">
         <span class="text-foreground">total</span>
-        {PROJECTS.length} projects found
+        {TOP_3_PROJECTS.length} featured projects found
       </div>
       <div class="h-2"></div>
 
       {
-        PROJECTS.map((project) => {
+        TOP_3_PROJECTS.map((project) => {
           const githubLink = project.links.github;
           return (
             <div class="group border-border hover:border-foreground my-2 border-l-2 pl-4 transition-colors">
