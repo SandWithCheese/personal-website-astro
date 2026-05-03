@@ -2,16 +2,13 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "./_components/Hero.astro";
 import About from "./_components/About.astro";
+import Projects from "./_components/Projects.astro";
 ---
 
 <Layout>
-  <main>
+  <main class="flex flex-col gap-24">
     <Hero />
     <About />
-    <section
-      class="flex min-h-screen w-full flex-col items-center justify-center px-24"
-    >
-      <h1>Hello World!</h1>
-    </section>
+    <Projects />
   </main>
 </Layout>

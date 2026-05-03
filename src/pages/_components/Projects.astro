@@ -1,0 +1,131 @@
+---
+import { PROJECTS } from "@/data/projects";
+import { ArrowUpRight } from "lucide-react";
+import GitHubIcon from "@/components/icons/github";
+---
+
+<section
+  class="flex min-h-screen w-full flex-col items-center justify-center gap-8 px-4 sm:px-8 md:px-24 xl:mx-auto xl:max-w-[1400px]"
+>
+  <div class="flex flex-col gap-2 self-start text-start">
+    <h2
+      class="text-muted-foreground font-sans text-xs font-semibold tracking-[0.3em]"
+    >
+      02 — WHAT I'VE BUILT
+    </h2>
+    <p class="text-4xl font-bold">Featured Projects</p>
+  </div>
+
+  <div
+    class="border-border bg-card w-full overflow-hidden rounded-xl border font-mono shadow-lg"
+  >
+    <div class="border-border flex items-center gap-1.5 border-b px-4 py-2.5">
+      <span class="h-2.5 w-2.5 rounded-full bg-[#ff5f57]"></span>
+      <span class="h-2.5 w-2.5 rounded-full bg-[#febc2e]"></span>
+      <span class="h-2.5 w-2.5 rounded-full bg-[#28c840]"></span>
+      <span class="text-muted-foreground mx-auto text-[13px] tracking-wider">
+        projects.sh
+      </span>
+    </div>
+
+    <div
+      class="flex flex-col gap-1 px-5 py-5 text-[14px] leading-relaxed sm:px-6"
+    >
+      <div class="flex items-baseline gap-2">
+        <span class="text-[hsl(150_70%_38%)]">~/portfolio $</span>
+        <span class="text-foreground">ls -la ./projects</span>
+      </div>
+      <div class="text-muted-foreground">
+        <span class="text-foreground">total</span>
+        {PROJECTS.length} projects found
+      </div>
+      <div class="h-2"></div>
+
+      {
+        PROJECTS.map((project) => {
+          const githubLink = project.links.github;
+          return (
+            <div class="group border-border hover:border-foreground my-2 border-l-2 pl-4 transition-colors">
+              <div class="flex items-center justify-between gap-3">
+                <a
+                  href={githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-foreground text-[15px] font-bold group-hover:underline"
+                >
+                  {project.title}
+                </a>
+                <div class="flex items-center gap-2">
+                  {githubLink && (
+                    <a
+                      href={githubLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title} on GitHub`}
+                    >
+                      <GitHubIcon className="h-3.5 w-3.5 fill-muted-foreground transition-colors group-hover:fill-foreground" />
+                    </a>
+                  )}
+                  <a
+                    href={githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${project.title} on GitHub`}
+                  >
+                    <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+                  </a>
+                </div>
+              </div>
+              <p class="text-muted-foreground mt-1 text-[13px] leading-relaxed">
+                {project.description}
+              </p>
+              <div class="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                <div class="flex flex-wrap gap-1.5">
+                  {project.tags.map((tag) => (
+                    <span class="text-[12px] text-[hsl(150_70%_38%)]">
+                      [{tag}]
+                    </span>
+                  ))}
+                </div>
+                {project.links.demo && (
+                  <span class="text-muted-foreground/60 text-[12px]">|</span>
+                )}
+                {project.links.demo && (
+                  <a
+                    href={project.links.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-[12px] text-[hsl(255_45%_60%)] underline-offset-2 transition-colors group-hover:text-[hsl(255_55%_70%)] group-hover:underline hover:text-[hsl(255_55%_75%)]"
+                  >
+                    [demo]
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        })
+      }
+
+      <div class="h-2"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-[hsl(150_70%_38%)]">~/portfolio $</span>
+        <span class="text-foreground">cd ./all-projects</span>
+        <span class="bg-foreground ml-0.5 inline-block h-3.5 w-2 animate-pulse"
+        ></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center">
+    <a
+      href="/projects"
+      class="group border-border bg-card text-foreground hover:border-foreground/40 inline-flex items-center gap-2 rounded-full border px-5 py-2.5 font-mono text-xs transition-all hover:-translate-y-0.5 hover:shadow-md"
+    >
+      <span class="text-muted-foreground">$</span>
+      view all projects
+      <ArrowUpRight
+        className="h-3.5 w-3.5 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+      />
+    </a>
+  </div>
+</section>
