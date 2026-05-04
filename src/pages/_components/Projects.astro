@@ -1,7 +1,10 @@
 ---
-import { TOP_3_PROJECTS } from "@/data/projects";
+import { getFeaturedProjects } from "@/lib/api/client";
+import { mapProjectsToUi } from "@/lib/api/projects";
 import { ArrowUpRight } from "lucide-react";
 import GitHubIcon from "@/components/icons/github";
+
+const featuredProjects = mapProjectsToUi((await getFeaturedProjects()).body);
 ---
 
 <section
@@ -37,12 +40,12 @@ import GitHubIcon from "@/components/icons/github";
       </div>
       <div class="text-muted-foreground">
         <span class="text-foreground">total</span>
-        {TOP_3_PROJECTS.length} featured projects found
+        {featuredProjects.length} featured projects found
       </div>
       <div class="h-2"></div>
 
       {
-        TOP_3_PROJECTS.map((project) => {
+        featuredProjects.map((project) => {
           const githubLink = project.links.github;
           return (
             <div class="group border-border hover:border-foreground my-2 border-l-2 pl-4 transition-colors">

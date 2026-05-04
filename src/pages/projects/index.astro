@@ -1,8 +1,11 @@
 ---
-import { PROJECTS } from "@/data/projects";
 import GitHubIcon from "@/components/icons/github";
 import Layout from "@/layouts/Layout.astro";
+import { getProjects } from "@/lib/api/client";
+import { mapProjectsToUi } from "@/lib/api/projects";
 import { ArrowUpRight } from "lucide-react";
+
+const projects = mapProjectsToUi((await getProjects()).body);
 ---
 
 <Layout>
@@ -28,7 +31,7 @@ import { ArrowUpRight } from "lucide-react";
           class="grid auto-rows-fr gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {
-            PROJECTS.map((project) => {
+            projects.map((project) => {
               const primaryLink = project.links.demo ?? project.links.github;
 
               return (
