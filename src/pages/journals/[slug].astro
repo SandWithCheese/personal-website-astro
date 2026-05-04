@@ -31,7 +31,12 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
 });
 ---
 
-<Layout>
+<!-- TODO: Add image -->
+<Layout
+  title={entry.data.title}
+  description={entry.data.description}
+  type="article"
+>
   <main>
     <div class="bg-foreground fixed top-0 left-0 z-60 h-0.5" id="progress-bar">
     </div>

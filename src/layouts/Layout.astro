@@ -2,6 +2,28 @@
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  robots?: string;
+  type?: "article" | "website";
+}
+
+const siteName = "Ahmad Naufal Ramadan";
+const {
+  title = "",
+  description = "I'm a Computer Science student at Institut Teknologi Bandung with a strong passion for software engineering and security. I'm deeply curious about how things work under the hood. I also enjoy sharing my thoughts and perspectives on things.",
+  image = "/og-image.png",
+  robots = "index, follow",
+  type = "website",
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL(Astro.url.origin);
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const imageUrl = new URL(image, siteUrl).toString();
 ---
 
 <!doctype html>
@@ -12,7 +34,22 @@ import "@/styles/global.css";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
   </head>
   <body class="bg-background text-foreground">
     <Header />

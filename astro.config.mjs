@@ -12,6 +12,8 @@ import { remarkReadingTime } from "./remark-reading-time.mjs";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://sandwicheese.tech",
+
   vite: {
     plugins: [tailwindcss()],
     build: {
