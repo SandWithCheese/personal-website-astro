@@ -47,7 +47,7 @@ function groupProjects(projects: ProjectWithStack[]) {
 
 function getString(formData: FormData, key: string) {
   const value = formData.get(key);
-  return typeof value === "string" ? value : "";
+  return typeof value === "string" ? value.trim() : "";
 }
 
 function getProjectInput(formData: FormData): ProjectInput {
@@ -257,9 +257,7 @@ const stacks = stacksResponse.body;
                     required
                     rows="3"
                     class="border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-3"
-                  >
-                    {project.Description}
-                  </textarea>
+                  >{project.Description.trim()}</textarea>
                 </label>
                 <label class="flex flex-col gap-2">
                   <span class="text-foreground font-mono text-xs">demo</span>
