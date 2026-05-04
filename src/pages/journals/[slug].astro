@@ -1,0 +1,168 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import temporaryThumbnail from "@/assets/profile.jpg";
+
+const author = "Nicholas Ardhito";
+
+export async function getStaticPaths() {
+  const entries = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+
+  return entries.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: {
+      entry,
+      nextEntry: entries[(index + 1) % entries.length],
+    },
+  }));
+}
+
+const { entry, nextEntry } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(entry);
+
+const dateFormatter = new Intl.DateTimeFormat("en", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+---
+
+<Layout>
+  <main>
+    <div class="fixed top-0 left-0 z-[60] h-0.5 bg-foreground" id="progress-bar"
+    ></div>
+
+    <div class="px-4 pt-32 pb-24 sm:px-8 md:px-24">
+      <article class="mx-auto max-w-2xl">
+        <a
+          href="/journals"
+          class="text-muted-foreground hover:text-foreground mb-12 inline-flex items-center gap-2 font-mono text-xs transition-colors"
+        >
+          <ArrowLeft className="h-3 w-3" />
+          cd ../journals
+        </a>
+
+        <header class="mb-10">
+          <div class="mb-4 flex flex-wrap gap-2 font-mono text-xs">
+            {entry.data.tags.map((tag) => (
+              <span class="border-border/80 bg-background/70 text-foreground/80 rounded-md border px-2 py-0.5">
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          <h1 class="text-4xl leading-[1.15] font-bold tracking-tight md:text-5xl">
+            {entry.data.title}
+          </h1>
+
+          <p class="text-muted-foreground mt-4 text-lg leading-relaxed">
+            {entry.data.description}
+          </p>
+
+          <div
+            class="text-muted-foreground mt-6 flex items-center gap-3 font-mono text-xs"
+          >
+            <span class="text-foreground">{author}</span>
+            <span>/</span>
+            <span>{dateFormatter.format(entry.data.pubDate)}</span>
+            {remarkPluginFrontmatter.minutesRead && (
+              <>
+                <span>/</span>
+                <span>{remarkPluginFrontmatter.minutesRead}</span>
+              </>
+            )}
+          </div>
+        </header>
+      </article>
+
+      <figure class="mx-auto mb-14 max-w-2xl">
+        <div class="border-border overflow-hidden rounded-lg border">
+          <Image
+            src={temporaryThumbnail}
+            alt=""
+            class="aspect-video w-full object-cover"
+            loading="eager"
+          />
+        </div>
+        <figcaption
+          class="text-muted-foreground mt-3 text-center font-mono text-xs"
+        >
+          ~/portfolio/journals/{entry.id}.cover
+        </figcaption>
+      </figure>
+
+      <article class="mx-auto max-w-2xl">
+        <div
+          class="prose prose-invert prose-neutral max-w-none text-[17px]
+            prose-headings:text-foreground prose-headings:font-bold prose-headings:tracking-tight
+            prose-h2:pt-6 prose-h2:text-2xl
+            prose-p:text-foreground/90 prose-p:leading-[1.8]
+            prose-a:text-foreground prose-a:underline-offset-4
+            prose-strong:text-foreground
+            prose-blockquote:border-l-2 prose-blockquote:border-foreground prose-blockquote:pl-6 prose-blockquote:text-lg prose-blockquote:text-muted-foreground prose-blockquote:italic
+            prose-code:text-foreground prose-code:before:content-none prose-code:after:content-none
+            prose-pre:overflow-x-auto prose-pre:rounded-md prose-pre:border prose-pre:border-border prose-pre:bg-card prose-pre:p-4 prose-pre:font-mono prose-pre:text-sm
+            prose-hr:border-border
+            prose-li:text-foreground/90
+            prose-img:rounded-lg prose-img:border prose-img:border-border"
+        >
+          <Content />
+        </div>
+
+        <footer class="border-border mt-16 border-t pt-8">
+          {entry.data.tags.length > 0 && (
+            <div class="mb-8 flex flex-wrap gap-2">
+              {entry.data.tags.map((tag) => (
+                <span class="border-border/80 bg-background/70 text-foreground/80 rounded-md border px-2 py-0.5 font-mono text-[11px]">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div
+            class="flex items-center justify-between gap-6 font-mono text-sm"
+          >
+            <a
+              href="/journals"
+              class="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              All posts
+            </a>
+            {
+              nextEntry && (
+                <a
+                  href={`/journals/${nextEntry.id}`}
+                  class="text-muted-foreground hover:text-foreground inline-flex min-w-0 items-center gap-2 text-right transition-colors"
+                >
+                  <span class="truncate">{nextEntry.data.title}</span>
+                  <ArrowRight className="h-4 w-4 shrink-0" />
+                </a>
+              )
+            }
+          </div>
+        </footer>
+      </article>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const progressBar = document.querySelector<HTMLElement>("#progress-bar");
+
+  function updateProgress() {
+    if (!progressBar) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    const progress = scrollTop / Math.max(scrollHeight - clientHeight, 1);
+    progressBar.style.width = `${progress * 100}%`;
+  }
+
+  updateProgress();
+  document.addEventListener("scroll", updateProgress, { passive: true });
+</script>

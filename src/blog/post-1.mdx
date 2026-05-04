@@ -1,0 +1,110 @@
+---
+title: "My first MDX post"
+description: "A short description of the post."
+pubDate: 2026-05-03
+tags: ["astro", "mdx", "blogging"]
+---
+
+# My first MDX post
+
+This opening paragraph is intentionally a little longer than usual. It should
+show how normal body text feels when it has room to breathe, how links like
+[Astro](https://astro.build) sit inside a sentence, and whether the first block
+of writing feels inviting enough to keep reading.
+
+The goal of this page is not to say anything important. It is here to stress
+the styling: paragraphs, headings, lists, quotes, code, separators, images, and
+other small pieces that tend to look fine in isolation but weird when they are
+all sitting together.
+
+## A Section Heading
+
+Good article styling should make hierarchy obvious without shouting. A second
+level heading should feel like a clear new room in the essay, not a billboard.
+
+Here is a paragraph with **bold emphasis**, _italic emphasis_, and `inline code`.
+The inline code should feel distinct, but it should not punch a hole through the
+line height.
+
+### A Smaller Heading
+
+Sometimes a section needs a smaller subdivision. This level should be useful for
+structure, but it should not compete with the main title or larger headings.
+
+- A plain unordered list item.
+- A second item with a little more text, long enough to wrap on smaller screens
+  so spacing and indentation can be checked.
+- A final item with `inline code` inside it.
+
+1. A numbered list item.
+2. Another numbered item that should align cleanly.
+3. A final numbered item, because three is enough for testing.
+
+> Design is mostly the discipline of deciding what deserves attention, then
+> removing enough noise for that thing to be noticed.
+
+The blockquote above should feel intentional and quiet. It should be visually
+different from the body copy without becoming decorative.
+
+## Code Blocks
+
+Here is a short code block. It should scroll horizontally if needed, keep its
+spacing, and sit comfortably inside the article width.
+
+```ts
+type JournalEntry = {
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+};
+
+export function formatEntry(entry: JournalEntry) {
+  return `${entry.title} — ${entry.tags.join(", ")}`;
+}
+```
+
+And here is something that looks more like a terminal note:
+
+```bash
+~/portfolio/journals $ pnpm build
+content synced
+pages generated
+build complete
+```
+
+## Tables
+
+| Element | Purpose | Feeling |
+| --- | --- | --- |
+| Heading | Establish structure | Clear |
+| Paragraph | Carry the thought | Calm |
+| Code | Show exact details | Precise |
+| Quote | Slow the reader down | Reflective |
+
+Tables can be awkward in prose pages, so this is here to see whether borders,
+spacing, and overflow behave well enough.
+
+---
+
+## Images
+
+![A temporary portfolio image used for styling tests](/src/assets/profile.jpg)
+
+The image above is only a placeholder. The important part is whether image
+corners, borders, captions or surrounding paragraph rhythm feel consistent with
+the rest of the page.
+
+## A Longer Passage
+
+There is a particular kind of writing that is less about announcing conclusions
+and more about keeping a record of attention. It can be technical one day,
+personal the next, and somewhere in between most of the time. That kind of
+writing needs a layout that does not over-explain itself.
+
+It should make room for uncertainty. It should let a small note feel complete,
+but also let a longer essay stretch out without tiring the reader. The page does
+not need to impress anyone at first glance. It needs to feel steady after ten
+minutes.
+
+That is the bar for this test content.

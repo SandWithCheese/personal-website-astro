@@ -7,6 +7,9 @@ import react from "@astrojs/react";
 
 import node from "@astrojs/node";
 
+import mdx from "@astrojs/mdx";
+import { remarkReadingTime } from "./remark-reading-time.mjs";
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -33,7 +36,10 @@ export default defineConfig({
     },
   },
 
-  integrations: [react()],
+  integrations: [react(), mdx()],
+  markdown: {
+    remarkPlugins: [remarkReadingTime],
+  },
 
   adapter: node({
     mode: "standalone",

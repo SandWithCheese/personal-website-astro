@@ -1,13 +1,107 @@
 ---
+import { Image } from "astro:assets";
+import temporaryThumbnail from "@/assets/profile.jpg";
 import Layout from "@/layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { ArrowUpRight } from "lucide-react";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const dateFormatter = new Intl.DateTimeFormat("en", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
 ---
 
 <Layout>
   <main>
-    <section
-      class="flex min-h-screen w-full flex-col items-center justify-center"
-    >
-      <h1>Hello World!</h1>
+    <section class="px-4 pt-32 pb-20 sm:px-8 md:px-24">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="mb-8 font-mono text-xs">
+          <div class="text-foreground flex items-center gap-1.5">
+            <span class="text-foreground font-semibold"
+              >~/portfolio/journals</span
+            >
+            <span class="text-muted-foreground">$</span>
+            <span>ls -la --sort=date</span>
+          </div>
+        </div>
+
+        <header class="mb-12">
+          <h1 class="text-4xl font-bold tracking-tight md:text-5xl">
+            Journals
+          </h1>
+          <p class="text-muted-foreground mt-3 text-base">
+            Things I have been thinking about, learning from, and slowly making
+            sense of.
+          </p>
+        </header>
+
+        <div
+          class="divide-border border-border flex flex-col divide-y border-y"
+        >
+          {
+            posts.map((post) => {
+              return (
+                <a
+                  href={`/journals/${post.id}`}
+                  class="group grid grid-cols-[96px_1fr_auto] items-center gap-5 py-6 sm:grid-cols-[132px_1fr_auto] sm:gap-7 sm:px-2"
+                >
+                  <div class="border-border overflow-hidden rounded-md border">
+                    <Image
+                      src={temporaryThumbnail}
+                      alt=""
+                      class="aspect-4/3 w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div class="min-w-0">
+                    <h2 class="text-foreground truncate text-base font-semibold tracking-tight underline-offset-4 group-hover:underline sm:text-lg">
+                      {post.data.title}
+                    </h2>
+                    <p class="text-muted-foreground mt-2 line-clamp-2 max-w-2xl text-sm leading-relaxed">
+                      {post.data.description}
+                    </p>
+                    <div class="text-muted-foreground mt-3 flex flex-wrap items-center gap-2 font-mono text-[10px] tracking-widest uppercase">
+                      <span>{dateFormatter.format(post.data.pubDate)}</span>
+                      {post.data.tags.length > 0 && (
+                        <>
+                          <span>/</span>
+                          <div class="hidden gap-1.5 sm:flex">
+                            {post.data.tags.map((tag) => (
+                              <span class="border-border/80 bg-background/70 text-foreground/80 rounded-md border px-2 py-0.5">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+                </a>
+              );
+            })
+          }
+        </div>
+
+        <div class="text-muted-foreground mt-10 font-mono text-xs">
+          <div class="flex items-center gap-1.5">
+            <span class="text-foreground font-semibold"
+              >~/portfolio/journals</span
+            >
+            <span>$</span>
+            <span
+              class="bg-foreground inline-block h-[1em] w-[0.55em] animate-pulse"
+            ></span>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 </Layout>
