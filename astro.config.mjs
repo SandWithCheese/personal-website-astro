@@ -41,6 +41,15 @@ export default defineConfig({
     remarkPlugins: [remarkReadingTime],
   },
 
+  security: {
+    allowedDomains: [
+      {
+        protocol: "https",
+        hostname: "sandwicheese.tech",
+      },
+    ],
+  },
+
   adapter: node({
     mode: "standalone",
   }),
