@@ -2,8 +2,69 @@
 export const prerender = false;
 
 import Layout from "@/layouts/Layout.astro";
+import { ArrowUpRight, FolderKanban, Layers3 } from "lucide-react";
 ---
 
 <Layout>
-  <main>CRM</main>
+  <main>
+    <section class="px-4 pt-32 pb-20 sm:px-8 md:px-24">
+      <div class="mx-auto flex max-w-[1400px] flex-col gap-10">
+        <div class="border-border mb-2 border-b pb-8">
+          <p
+            class="text-muted-foreground mb-3 font-mono text-xs tracking-[0.3em] uppercase"
+          >
+            ~/portfolio/crm
+          </p>
+          <h1 class="text-foreground mb-3 text-4xl font-bold md:text-5xl">
+            CRM
+          </h1>
+          <p class="text-muted-foreground max-w-xl text-sm md:text-base">
+            Manage portfolio projects and technology stacks.
+          </p>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+          <a
+            href="/crm/projects"
+            class="group border-border bg-card hover:border-foreground/40 hover:shadow-foreground/5 flex min-h-[180px] flex-col rounded-xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="mb-4 flex items-start justify-between">
+              <div
+                class="border-border bg-background flex h-10 w-10 items-center justify-center rounded-md border"
+              >
+                <FolderKanban className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <ArrowUpRight
+                className="h-4 w-4 text-muted-foreground transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-foreground"
+              />
+            </div>
+            <h2 class="text-foreground text-lg font-bold">Projects</h2>
+            <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+              Create, update, feature, and remove portfolio projects.
+            </p>
+          </a>
+
+          <a
+            href="/crm/stacks"
+            class="group border-border bg-card hover:border-foreground/40 hover:shadow-foreground/5 flex min-h-[180px] flex-col rounded-xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+          >
+            <div class="mb-4 flex items-start justify-between">
+              <div
+                class="border-border bg-background flex h-10 w-10 items-center justify-center rounded-md border"
+              >
+                <Layers3 className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <ArrowUpRight
+                className="h-4 w-4 text-muted-foreground transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-foreground"
+              />
+            </div>
+            <h2 class="text-foreground text-lg font-bold">Stacks</h2>
+            <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+              Manage reusable technology stack labels for projects.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
 </Layout>

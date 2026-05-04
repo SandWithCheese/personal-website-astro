@@ -9,7 +9,6 @@ function isProtectedRoute(pathname: string) {
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url;
-  console.log(pathname);
 
   if (!isProtectedRoute(pathname)) {
     return next();

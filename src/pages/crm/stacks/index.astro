@@ -1,0 +1,163 @@
+---
+export const prerender = false;
+
+import Layout from "@/layouts/Layout.astro";
+import {
+  ApiError,
+  createStackFromRequest,
+  deleteStackFromRequest,
+  getStacks,
+  updateStackFromRequest,
+} from "@/lib/api/client";
+import { StackInputSchema } from "@/lib/api/schema";
+import { ArrowLeft, Plus, Save, Trash2 } from "lucide-react";
+
+let errorMessage = "";
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+    const action = formData.get("action");
+    const stackId = Number(formData.get("stackId"));
+
+    if (action === "create") {
+      await createStackFromRequest(
+        Astro.request,
+        StackInputSchema.parse({
+          name: formData.get("name"),
+        }),
+      );
+    }
+
+    if (action === "update") {
+      await updateStackFromRequest(
+        Astro.request,
+        stackId,
+        StackInputSchema.parse({
+          name: formData.get("name"),
+        }),
+      );
+    }
+
+    if (action === "delete") {
+      await deleteStackFromRequest(Astro.request, stackId);
+    }
+
+    return Astro.redirect("/crm/stacks", 303);
+  } catch (error) {
+    errorMessage =
+      error instanceof ApiError
+        ? error.message
+        : "Could not save stack. Check the form and try again.";
+  }
+}
+
+const stacksResponse = await getStacks();
+const stacks = stacksResponse.body;
+---
+
+<Layout>
+  <main>
+    <section class="px-4 pt-32 pb-20 sm:px-8 md:px-24">
+      <div class="mx-auto flex max-w-[1400px] flex-col gap-8">
+        <a
+          href="/crm"
+          class="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 font-mono text-xs transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          cd ../crm
+        </a>
+
+        <div class="border-border border-b pb-8">
+          <p
+            class="text-muted-foreground mb-3 font-mono text-xs tracking-[0.3em] uppercase"
+          >
+            ~/portfolio/crm/stacks
+          </p>
+          <h1 class="text-foreground mb-3 text-4xl font-bold md:text-5xl">
+            Stacks
+          </h1>
+          <p class="text-muted-foreground max-w-xl text-sm md:text-base">
+            Manage the stack labels used by portfolio projects.
+          </p>
+        </div>
+
+        {
+          errorMessage && (
+            <p class="border-destructive/40 bg-destructive/10 text-destructive rounded-md border px-3 py-2 text-sm">
+              {errorMessage}
+            </p>
+          )
+        }
+
+        <form
+          method="post"
+          class="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-[1fr_auto]"
+        >
+          <input type="hidden" name="action" value="create" />
+          <label class="flex flex-col gap-2">
+            <span class="text-foreground font-mono text-xs">name</span>
+            <input
+              name="name"
+              required
+              maxlength="255"
+              placeholder="Go"
+              class="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
+            />
+          </label>
+          <button
+            type="submit"
+            class="bg-foreground text-background self-end inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition-opacity hover:opacity-85"
+          >
+            <Plus className="h-4 w-4" />
+            Add stack
+          </button>
+        </form>
+
+        <div class="divide-border border-border flex flex-col divide-y border-y">
+          {
+            stacks.map((stack) => (
+              <form
+                method="post"
+                class="grid gap-3 py-4 md:grid-cols-[96px_1fr_auto_auto] md:items-end md:px-2"
+              >
+                <input type="hidden" name="stackId" value={stack.ID} />
+                <div class="text-muted-foreground font-mono text-xs">
+                  #{stack.ID}
+                </div>
+                <label class="flex flex-col gap-2">
+                  <span class="text-foreground font-mono text-xs">name</span>
+                  <input
+                    name="name"
+                    required
+                    maxlength="255"
+                    value={stack.Name}
+                    class="border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  name="action"
+                  value="update"
+                  class="border-border text-foreground hover:border-foreground/40 inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
+                >
+                  <Save className="h-4 w-4" />
+                  Save
+                </button>
+                <button
+                  type="submit"
+                  name="action"
+                  value="delete"
+                  class="border-destructive/40 text-destructive hover:bg-destructive/10 inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete
+                </button>
+              </form>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

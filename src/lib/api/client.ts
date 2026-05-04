@@ -43,23 +43,29 @@ function getApiUrl(path: string) {
 
 function getJsonInit(init: ApiFetchInit = {}): RequestInit {
   const { json, headers, ...rest } = init;
+  const requestHeaders = new Headers(headers);
 
   if (json === undefined) {
     return {
       credentials: "include",
       ...rest,
-      headers,
+      headers: requestHeaders,
     };
   }
+
+  requestHeaders.set("Content-Type", "application/json");
 
   return {
     credentials: "include",
     ...rest,
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
+    headers: requestHeaders,
     body: JSON.stringify(json),
+  };
+}
+
+function getRequestCookieHeaders(request: Request) {
+  return {
+    cookie: request.headers.get("cookie") ?? "",
   };
 }
 
@@ -153,6 +159,14 @@ export function createProject(input: ProjectInput) {
   });
 }
 
+export function createProjectFromRequest(request: Request, input: ProjectInput) {
+  return apiFetch("/projects/", ProjectResponseSchema, {
+    method: "POST",
+    headers: getRequestCookieHeaders(request),
+    json: ProjectInputSchema.parse(input),
+  });
+}
+
 export function updateProject(projectId: number, input: ProjectInput) {
   assertId(projectId);
 
@@ -162,11 +176,34 @@ export function updateProject(projectId: number, input: ProjectInput) {
   });
 }
 
+export function updateProjectFromRequest(
+  request: Request,
+  projectId: number,
+  input: ProjectInput,
+) {
+  assertId(projectId);
+
+  return apiFetch(`/projects/${projectId}`, ProjectResponseSchema, {
+    method: "PUT",
+    headers: getRequestCookieHeaders(request),
+    json: ProjectInputSchema.parse(input),
+  });
+}
+
 export function deleteProject(projectId: number) {
   assertId(projectId);
 
   return apiFetch(`/projects/${projectId}`, ProjectResponseSchema, {
     method: "DELETE",
+  });
+}
+
+export function deleteProjectFromRequest(request: Request, projectId: number) {
+  assertId(projectId);
+
+  return apiFetch(`/projects/${projectId}`, ProjectResponseSchema, {
+    method: "DELETE",
+    headers: getRequestCookieHeaders(request),
   });
 }
 
@@ -181,6 +218,14 @@ export function createStack(input: StackInput) {
   });
 }
 
+export function createStackFromRequest(request: Request, input: StackInput) {
+  return apiFetch("/stacks/", StackResponseSchema, {
+    method: "POST",
+    headers: getRequestCookieHeaders(request),
+    json: StackInputSchema.parse(input),
+  });
+}
+
 export function updateStack(stackId: number, input: StackInput) {
   assertId(stackId);
 
@@ -190,10 +235,33 @@ export function updateStack(stackId: number, input: StackInput) {
   });
 }
 
+export function updateStackFromRequest(
+  request: Request,
+  stackId: number,
+  input: StackInput,
+) {
+  assertId(stackId);
+
+  return apiFetch(`/stacks/${stackId}`, StackResponseSchema, {
+    method: "PUT",
+    headers: getRequestCookieHeaders(request),
+    json: StackInputSchema.parse(input),
+  });
+}
+
 export function deleteStack(stackId: number) {
   assertId(stackId);
 
   return apiFetch(`/stacks/${stackId}`, StackResponseSchema, {
     method: "DELETE",
+  });
+}
+
+export function deleteStackFromRequest(request: Request, stackId: number) {
+  assertId(stackId);
+
+  return apiFetch(`/stacks/${stackId}`, StackResponseSchema, {
+    method: "DELETE",
+    headers: getRequestCookieHeaders(request),
   });
 }
