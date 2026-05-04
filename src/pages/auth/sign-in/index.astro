@@ -1,0 +1,100 @@
+---
+export const prerender = false;
+
+import Layout from "@/layouts/Layout.astro";
+import { ApiError, signInWithResponse } from "@/lib/api/client";
+import { AuthSignInInputSchema } from "@/lib/api/schema";
+import { KeyRound, LogIn } from "lucide-react";
+
+let errorMessage = "";
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+    const token = formData.get("token");
+    const input = AuthSignInInputSchema.parse({
+      token: typeof token === "string" ? token : "",
+    });
+    const { response } = await signInWithResponse(input);
+    const headers = new Headers({ Location: "/crm" });
+    const setCookie = response.headers.get("set-cookie");
+
+    if (setCookie) {
+      headers.set("Set-Cookie", setCookie);
+    }
+
+    return new Response(null, {
+      status: 303,
+      headers,
+    });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = "Please enter a valid access token.";
+    }
+  }
+}
+---
+
+<Layout>
+  <main>
+    <section
+      class="flex min-h-screen items-center justify-center px-4 py-32 sm:px-8"
+    >
+      <div class="w-full max-w-sm">
+        <div class="border-border bg-card rounded-xl border p-6 shadow-lg">
+          <div class="mb-8">
+            <div
+              class="border-border bg-background mb-5 flex h-10 w-10 items-center justify-center rounded-md border"
+            >
+              <KeyRound className="text-muted-foreground h-4 w-4" />
+            </div>
+            <p
+              class="text-muted-foreground mb-3 font-mono text-xs tracking-[0.3em] uppercase"
+            >
+              ~/auth/sign-in
+            </p>
+            <h1 class="text-foreground text-2xl font-bold tracking-tight">
+              Sign in
+            </h1>
+            <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+              Enter your access token to continue.
+            </p>
+          </div>
+
+          <form class="flex flex-col gap-5" method="post">
+            {
+              errorMessage && (
+                <p class="border-destructive/40 bg-destructive/10 text-destructive rounded-md border px-3 py-2 text-sm">
+                  {errorMessage}
+                </p>
+              )
+            }
+
+            <label class="flex flex-col gap-2">
+              <span class="text-foreground font-mono text-xs">token</span>
+              <input
+                type="password"
+                name="token"
+                autocomplete="one-time-code"
+                required
+                autofocus
+                placeholder="Paste access token"
+                class="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-11 rounded-md border px-3 font-mono text-sm transition-[border-color,box-shadow] outline-none focus-visible:ring-3"
+              />
+            </label>
+
+            <button
+              type="submit"
+              class="bg-foreground text-background inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition-opacity hover:opacity-85"
+            >
+              Continue
+              <LogIn className="h-4 w-4" />
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
