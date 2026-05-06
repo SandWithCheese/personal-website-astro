@@ -2,6 +2,17 @@
 export const prerender = false;
 
 import Layout from "@/layouts/Layout.astro";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   ApiError,
   createStackFromRequest,
@@ -11,6 +22,11 @@ import {
 } from "@/lib/api/client";
 import { StackInputSchema } from "@/lib/api/schema";
 import { ArrowLeft, Plus, Save, Trash2 } from "lucide-react";
+
+const fieldClass = "gap-2";
+const labelClass = "font-mono text-xs text-muted-foreground";
+const saveButtonClass =
+  "hover:border-border hover:bg-primary/10 hover:text-foreground";
 
 let errorMessage = "";
 
@@ -90,70 +106,74 @@ const stacks = stacksResponse.body;
           )
         }
 
-        <form
-          method="post"
-          class="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-[1fr_auto]"
-        >
-          <input type="hidden" name="action" value="create" />
-          <label class="flex flex-col gap-2">
-            <span class="text-foreground font-mono text-xs">name</span>
-            <input
-              name="name"
-              required
-              maxlength="255"
-              placeholder="Go"
-              class="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-            />
-          </label>
-          <button
-            type="submit"
-            class="bg-foreground text-background self-end inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition-opacity hover:opacity-85"
-          >
-            <Plus className="h-4 w-4" />
-            Add stack
-          </button>
-        </form>
+        <Card className="gap-0 py-0">
+          <CardHeader className="border-border border-b py-5">
+            <CardTitle>Add Stack</CardTitle>
+            <CardDescription>
+              Create one reusable technology label.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-5">
+            <form method="post" class="grid gap-4 md:grid-cols-[1fr_auto]">
+              <input type="hidden" name="action" value="create" />
+              <Label className={`flex flex-col ${fieldClass}`}>
+                <span class={labelClass}>name</span>
+                <Input name="name" required placeholder="Go" className="h-10" />
+              </Label>
+              <Button type="submit" size="lg" className="self-end">
+                <Plus className="h-4 w-4" />
+                Add stack
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
 
-        <div class="divide-border border-border flex flex-col divide-y border-y">
+        <div class="grid gap-3">
           {
             stacks.map((stack) => (
-              <form
-                method="post"
-                class="grid gap-3 py-4 md:grid-cols-[96px_1fr_auto_auto] md:items-end md:px-2"
-              >
-                <input type="hidden" name="stackId" value={stack.ID} />
-                <div class="text-muted-foreground font-mono text-xs">
-                  #{stack.ID}
-                </div>
-                <label class="flex flex-col gap-2">
-                  <span class="text-foreground font-mono text-xs">name</span>
-                  <input
-                    name="name"
-                    required
-                    maxlength="255"
-                    value={stack.Name}
-                    class="border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-                  />
-                </label>
-                <button
-                  type="submit"
-                  name="action"
-                  value="update"
-                  class="border-border text-foreground hover:border-foreground/40 inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
+              <Card size="sm" className="gap-0 py-0">
+                <form
+                  method="post"
+                  class="grid gap-4 p-4 md:grid-cols-[96px_1fr_auto] md:items-end"
                 >
-                  <Save className="h-4 w-4" />
-                  Save
-                </button>
-                <button
-                  type="submit"
-                  name="action"
-                  value="delete"
-                  class="border-destructive/40 text-destructive hover:bg-destructive/10 inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  Delete
-                </button>
-              </form>
+                  <input type="hidden" name="stackId" value={stack.ID} />
+                  <div class="text-muted-foreground font-mono text-xs md:pb-3">
+                    #{stack.ID}
+                  </div>
+                  <Label className={`flex flex-col ${fieldClass}`}>
+                    <span class={labelClass}>name</span>
+                    <Input
+                      name="name"
+                      required
+                      defaultValue={stack.Name}
+                      className="h-10"
+                    />
+                  </Label>
+                  <CardAction className="col-auto row-auto flex gap-2 self-end justify-self-start md:justify-self-end">
+                    <Button
+                      type="submit"
+                      name="action"
+                      value="update"
+                      variant="outline"
+                      size="lg"
+                      className={saveButtonClass}
+                    >
+                      <Save className="h-4 w-4" />
+                      Save
+                    </Button>
+                    <Button
+                      type="submit"
+                      name="action"
+                      value="delete"
+                      variant="destructive"
+                      size="lg"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Delete
+                    </Button>
+                  </CardAction>
+                </form>
+              </Card>
             ))
           }
         </div>

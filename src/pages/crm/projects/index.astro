@@ -2,6 +2,19 @@
 export const prerender = false;
 
 import Layout from "@/layouts/Layout.astro";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ApiError,
   createProjectFromRequest,
@@ -15,7 +28,15 @@ import {
   type ProjectInput,
   type ProjectWithStack,
 } from "@/lib/api/schema";
-import { ArrowLeft, Plus, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, Link2, Plus, Save, Star, Trash2 } from "lucide-react";
+import GitHubIcon from "@/components/icons/github";
+
+const fieldClass = "gap-2";
+const labelClass = "font-mono text-xs text-muted-foreground";
+const saveButtonClass =
+  "hover:border-border hover:bg-primary/10 hover:text-foreground";
+const nativeCheckboxClass =
+  "border-input bg-background text-primary focus-visible:ring-ring/50 h-4 w-4 rounded accent-primary outline-none focus-visible:ring-3";
 
 type GroupedProject = Omit<ProjectWithStack, "StackID" | "StackName"> & {
   stacks: Array<{ ID: number; Name: string }>;
@@ -141,185 +162,217 @@ const stacks = stacksResponse.body;
           )
         }
 
-        <form
-          method="post"
-          class="border-border bg-card grid gap-4 rounded-xl border p-5 lg:grid-cols-2"
-        >
-          <input type="hidden" name="action" value="create" />
-          <label class="flex flex-col gap-2">
-            <span class="text-foreground font-mono text-xs">title</span>
-            <input
-              name="title"
-              required
-              maxlength="255"
-              placeholder="Project title"
-              class="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-            />
-          </label>
-          <label class="flex flex-col gap-2">
-            <span class="text-foreground font-mono text-xs">github</span>
-            <input
-              name="github"
-              type="url"
-              required
-              placeholder="https://github.com/example/repo"
-              class="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-            />
-          </label>
-          <label class="flex flex-col gap-2 lg:col-span-2">
-            <span class="text-foreground font-mono text-xs">description</span>
-            <textarea
-              name="description"
-              required
-              rows="3"
-              placeholder="Project description"
-              class="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-3"
-            ></textarea>
-          </label>
-          <label class="flex flex-col gap-2">
-            <span class="text-foreground font-mono text-xs">demo</span>
-            <input
-              name="demo"
-              type="url"
-              placeholder="https://example.com"
-              class="border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-            />
-          </label>
-          <label class="flex items-center gap-2 self-end">
-            <input
-              name="featured"
-              type="checkbox"
-              class="border-input bg-background h-4 w-4 rounded"
-            />
-            <span class="text-foreground font-mono text-xs">featured</span>
-          </label>
-          <fieldset class="flex flex-col gap-2 lg:col-span-2">
-            <legend class="text-foreground mb-2 font-mono text-xs">
-              stacks
-            </legend>
-            <div class="flex flex-wrap gap-2">
-              {
-                stacks.map((stack) => (
-                  <label class="border-border bg-background/70 text-foreground/80 inline-flex items-center gap-2 rounded-md border px-2 py-1 font-mono text-xs">
-                    <input name="stack_ids" type="checkbox" value={stack.ID} />
-                    {stack.Name}
-                  </label>
-                ))
-              }
-            </div>
-          </fieldset>
-          <button
-            type="submit"
-            class="bg-foreground text-background inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition-opacity hover:opacity-85 lg:col-span-2"
-          >
-            <Plus className="h-4 w-4" />
-            Add project
-          </button>
-        </form>
-
-        <div class="flex flex-col gap-5">
-          {
-            projects.map((project) => (
-              <form
-                method="post"
-                class="border-border bg-card grid gap-4 rounded-xl border p-5 lg:grid-cols-2"
+        <Card className="gap-0 py-0">
+          <CardHeader className="border-border border-b py-5">
+            <CardTitle>Add Project</CardTitle>
+            <CardDescription>
+              Create a portfolio project with links and stack labels.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-5">
+            <form method="post" class="grid gap-5 lg:grid-cols-2">
+              <input type="hidden" name="action" value="create" />
+              <Label className={`flex flex-col ${fieldClass}`}>
+                <span class={labelClass}>title</span>
+                <Input
+                  name="title"
+                  required
+                  placeholder="Project title"
+                  className="h-10"
+                />
+              </Label>
+              <Label className={`flex flex-col ${fieldClass}`}>
+                <span class={labelClass}>github</span>
+                <Input
+                  name="github"
+                  type="url"
+                  required
+                  placeholder="https://github.com/example/repo"
+                  className="h-10"
+                />
+              </Label>
+              <Label className={`flex flex-col lg:col-span-2 ${fieldClass}`}>
+                <span class={labelClass}>description</span>
+                <Textarea
+                  name="description"
+                  required
+                  rows={3}
+                  placeholder="Project description"
+                  className="min-h-24"
+                />
+              </Label>
+              <Label className={`flex flex-col ${fieldClass}`}>
+                <span class={labelClass}>demo</span>
+                <Input
+                  name="demo"
+                  type="url"
+                  placeholder="https://example.com"
+                  className="h-10"
+                />
+              </Label>
+              <Label
+                className="border-border bg-background/40 flex h-10 items-center gap-2 self-end rounded-md border px-3"
               >
-                <input type="hidden" name="projectId" value={project.ID} />
-                <div class="text-muted-foreground font-mono text-xs lg:col-span-2">
-                  #{project.ID} / {project.CreatedAt}
-                </div>
-                <label class="flex flex-col gap-2">
-                  <span class="text-foreground font-mono text-xs">title</span>
-                  <input
-                    name="title"
-                    required
-                    maxlength="255"
-                    value={project.Title}
-                    class="border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-                  />
-                </label>
-                <label class="flex flex-col gap-2">
-                  <span class="text-foreground font-mono text-xs">github</span>
-                  <input
-                    name="github"
-                    type="url"
-                    required
-                    value={project.Github}
-                    class="border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-                  />
-                </label>
-                <label class="flex flex-col gap-2 lg:col-span-2">
-                  <span class="text-foreground font-mono text-xs">
-                    description
-                  </span>
-                  <textarea
-                    name="description"
-                    required
-                    rows="3"
-                    class="border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-3"
-                  >{project.Description.trim()}</textarea>
-                </label>
-                <label class="flex flex-col gap-2">
-                  <span class="text-foreground font-mono text-xs">demo</span>
-                  <input
-                    name="demo"
-                    type="url"
-                    value={project.Demo.Valid ? project.Demo.String : ""}
-                    class="border-input bg-background text-foreground focus-visible:border-ring focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-3"
-                  />
-                </label>
-                <label class="flex items-center gap-2 self-end">
-                  <input
-                    name="featured"
-                    type="checkbox"
-                    checked={project.Featured}
-                    class="border-input bg-background h-4 w-4 rounded"
-                  />
-                  <span class="text-foreground font-mono text-xs">
-                    featured
-                  </span>
-                </label>
-                <fieldset class="flex flex-col gap-2 lg:col-span-2">
-                  <legend class="text-foreground mb-2 font-mono text-xs">
-                    stacks
-                  </legend>
-                  <div class="flex flex-wrap gap-2">
-                    {stacks.map((stack) => (
-                      <label class="border-border bg-background/70 text-foreground/80 inline-flex items-center gap-2 rounded-md border px-2 py-1 font-mono text-xs">
+                <input
+                  name="featured"
+                  type="checkbox"
+                  class={nativeCheckboxClass}
+                />
+                <span class={labelClass}>featured</span>
+              </Label>
+              <fieldset class="flex flex-col gap-3 lg:col-span-2">
+                <legend class={labelClass}>stacks</legend>
+                <div class="flex flex-wrap gap-2">
+                  {
+                    stacks.map((stack) => (
+                      <label class="border-border bg-background/60 text-foreground/85 hover:border-foreground/30 inline-flex h-8 items-center gap-2 rounded-md border px-3 font-mono text-xs transition-colors">
                         <input
                           name="stack_ids"
                           type="checkbox"
                           value={stack.ID}
-                          checked={project.stacks.some(
-                            (projectStack) => projectStack.ID === stack.ID,
-                          )}
+                          class={nativeCheckboxClass}
                         />
                         {stack.Name}
                       </label>
-                    ))}
-                  </div>
-                </fieldset>
-                <div class="flex flex-wrap gap-2 lg:col-span-2">
-                  <button
-                    type="submit"
-                    name="action"
-                    value="update"
-                    class="border-border text-foreground hover:border-foreground/40 inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
-                  >
-                    <Save className="h-4 w-4" />
-                    Save
-                  </button>
-                  <button
-                    type="submit"
-                    name="action"
-                    value="delete"
-                    class="border-destructive/40 text-destructive hover:bg-destructive/10 inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Delete
-                  </button>
+                    ))
+                  }
                 </div>
-              </form>
+              </fieldset>
+              <Button type="submit" size="lg" className="lg:col-span-2">
+                <Plus className="h-4 w-4" />
+                Add project
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        <div class="flex flex-col gap-5">
+          {
+            projects.map((project) => (
+              <Card className="gap-0 py-0">
+                <form method="post">
+                  <input type="hidden" name="projectId" value={project.ID} />
+                  <CardHeader className="border-border border-b py-5">
+                    <div class="flex min-w-0 flex-col gap-2">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <CardTitle className="truncate">
+                          {project.Title}
+                        </CardTitle>
+                        {project.Featured && (
+                          <Badge variant="secondary" className="gap-1">
+                            <Star className="h-3 w-3" />
+                            Featured
+                          </Badge>
+                        )}
+                      </div>
+                      <CardDescription className="font-mono text-xs">
+                        #{project.ID} / {project.CreatedAt}
+                      </CardDescription>
+                    </div>
+                    <CardAction className="flex gap-2">
+                      <Button
+                        type="submit"
+                        name="action"
+                        value="update"
+                        variant="outline"
+                        size="lg"
+                        className={saveButtonClass}
+                      >
+                        <Save className="h-4 w-4" />
+                        Save
+                      </Button>
+                      <Button
+                        type="submit"
+                        name="action"
+                        value="delete"
+                        variant="destructive"
+                        size="lg"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </Button>
+                    </CardAction>
+                  </CardHeader>
+                  <CardContent className="grid gap-5 p-5 lg:grid-cols-2">
+                    <Label className={`flex flex-col ${fieldClass}`}>
+                      <span class={labelClass}>title</span>
+                      <Input
+                        name="title"
+                        required
+                        defaultValue={project.Title}
+                        className="h-10"
+                      />
+                    </Label>
+                    <Label className={`flex flex-col ${fieldClass}`}>
+                      <span class={labelClass}>
+                        <GitHubIcon className="mr-1 inline h-3.5 w-3.5" />
+                        github
+                      </span>
+                      <Input
+                        name="github"
+                        type="url"
+                        required
+                        defaultValue={project.Github}
+                        className="h-10"
+                      />
+                    </Label>
+                    <Label
+                      className={`flex flex-col lg:col-span-2 ${fieldClass}`}
+                    >
+                      <span class={labelClass}>description</span>
+                      <Textarea
+                        name="description"
+                        required
+                        rows={3}
+                        defaultValue={project.Description.trim()}
+                        className="min-h-24"
+                      />
+                    </Label>
+                    <Label className={`flex flex-col ${fieldClass}`}>
+                      <span class={labelClass}>
+                        <Link2 className="mr-1 inline h-3.5 w-3.5" />
+                        demo
+                      </span>
+                      <Input
+                        name="demo"
+                        type="url"
+                        defaultValue={
+                          project.Demo.Valid ? project.Demo.String : ""
+                        }
+                        className="h-10"
+                      />
+                    </Label>
+                    <Label className="border-border bg-background/40 flex h-10 items-center gap-2 self-end rounded-md border px-3">
+                      <input
+                        name="featured"
+                        type="checkbox"
+                        checked={project.Featured}
+                        class={nativeCheckboxClass}
+                      />
+                      <span class={labelClass}>featured</span>
+                    </Label>
+                    <fieldset class="flex flex-col gap-3 lg:col-span-2">
+                      <legend class={labelClass}>stacks</legend>
+                      <div class="flex flex-wrap gap-2">
+                        {stacks.map((stack) => (
+                          <label class="border-border bg-background/60 text-foreground/85 hover:border-foreground/30 inline-flex h-8 items-center gap-2 rounded-md border px-3 font-mono text-xs transition-colors">
+                            <input
+                              name="stack_ids"
+                              type="checkbox"
+                              value={stack.ID}
+                              checked={project.stacks.some(
+                                (projectStack) => projectStack.ID === stack.ID,
+                              )}
+                              class={nativeCheckboxClass}
+                            />
+                            {stack.Name}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                  </CardContent>
+                </form>
+              </Card>
             ))
           }
         </div>
