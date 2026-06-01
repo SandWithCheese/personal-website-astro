@@ -32,7 +32,7 @@ export const GET: APIRoute = async ({ site }) => {
       lastmod: todayLastmod,
     })),
     ...posts.map((post) => ({
-      path: `/journals/${post.id}`,
+      path: `/journals/${post.data.slug}`,
       lastmod: getLastmod(post.data.pubDate, today),
     })),
   ];

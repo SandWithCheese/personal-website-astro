@@ -9,6 +9,9 @@ const blog = defineCollection({
   }),
   schema: ({ image }) =>
     z.object({
+      slug: z.string().min(1).refine((slug) => !slug.includes("/"), {
+        message: "Blog slugs must not contain slashes.",
+      }),
       title: z.string(),
       description: z.string(),
       cover: image(),
